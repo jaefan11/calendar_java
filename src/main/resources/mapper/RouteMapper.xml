@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scu.szmt.mapper.RouteMapper">
+    <select id="findRouteByUserId" resultType="Route">
+        SELECT * FROM (SELECT r_id AS id FROM user_rou WHERE u_id=#{id}) AS a NATURAL JOIN route where timeSlot=1 or (start &gt;= #{start} and start  &lt;= #{end})
+    </select>
+    <insert id="addRoute" parameterType="Route" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Route(title,START,END,allDay,place,content,cre_id,timeSlot) VALUES(#{title},#{start},#{end},#{allDay},#{place},#{content},#{creId},#{timeSlot})
+    </insert>
+    <insert id="addPersons" parameterType="int">
+        insert into persons_rou(r_id,u_id) values(#{param1},#{param2})
+    </insert>
+
+    <insert id="addUserRou" parameterType="int">
+        replace into user_rou(u_id,r_id) values(#{param1},#{param2})
+    </insert>
+    <delete id="deletRouteById" parameterType="int">
+        delete from Route where id = #{id}
+    </delete>
+    <update id="updateRouteById" parameterType="Route">
+        update route set title=#{title},start=#{start},end=#{end},allDay=#{allDay},place=#{place},content=#{content} where id=#{id}
+    </update>
+    <delete id="deletPersonsRouByRid" parameterType="int">
+        delete from persons_rou where r_id = #{rId}
+    </delete>
+    <select id="searchRou" resultType="Route">
+        <if test="person!=null">
+            with u as (SELECT id FROM USER WHERE NAME LIKE '%${person}%')
+        </if>
+        SELECT * FROM (SELECT r_id AS id FROM user_rou WHERE u_id=#{id}) AS a NATURAL JOIN route
+        where
+        <if test="content!= null">
+            title like '%${content}%' or content like '%${content}%'
+        </if>
+
+        <if test="person!=null">
+            and cre_id in (SELECT * FROM u) or id in (select r_id from u INNER JOIN user_rou ON u.id=user_rou.u_id )
+        </if>
+        <if test="start!=''">
+            and start &gt;= #{start}
+        </if>
+        <if test="end!=''">
+            and start  &lt;= #{end}
+        </if>
+        <if test="place!=null">
+            and place like '%${place}%'
+        </if>
+    </select>
+
+</mapper>

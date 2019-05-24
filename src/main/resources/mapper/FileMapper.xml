@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scu.szmt.mapper.FileMapper">
+    <select id="findFilesByCid" resultType="MyFile">
+        SELECT * FROM (SELECT f_id AS id FROM file_con WHERE c_id=#{id}) AS a NATURAL JOIN files
+    </select>
+    <insert id="uploadFile" parameterType="MyFile" useGeneratedKeys="true" keyProperty="id">
+        insert INTO files(name,url) values (#{name},#{url})
+    </insert>
+    <select id="findFileById" resultType="MyFile">
+        select * from files where id=#{id}
+    </select>
+    <delete id="deletFileByCid" parameterType="int">
+        DELETE FROM files WHERE id IN (SELECT f_id AS id FROM file_con WHERE c_id=#{id})
+    </delete>
+    <delete id="removeFileById" parameterType="int">
+        DELETE from files where id=#{id}
+    </delete>
+</mapper>

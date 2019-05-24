@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scu.szmt.mapper.NoteMapper">
+    <insert id="addNote" parameterType="int">
+        insert into note(u_id,c_id) values (#{uId},#{cId})
+    </insert>
+    <delete id="deleteNoteByUid" parameterType="int">
+        delete from note where u_id=#{id}
+    </delete>
+    <select id="findConInNote" resultType="Note">
+        select n_id as id ,time,name from (select n_id,start as time,cre_id as id from (select id as n_id, c_id as id FROM note where u_id=#{id}) as a natural join confence) as b natural join user
+    </select>
+    <delete id="deleteNote" parameterType="int">
+         delete from note where id=#{id}
+    </delete>
+</mapper>

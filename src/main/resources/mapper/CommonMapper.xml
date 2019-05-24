@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scu.szmt.mapper.CommonMapper">
+    <insert id="addSubscribe" parameterType="int">
+        replace into subscribe(u_id,sub_id) values(#{param1},#{param2})
+    </insert>
+    <select id="findSubById" parameterType="int" resultType="int">
+        select sub_id from subscribe where u_id=#{id}
+    </select>
+    <select id="findConference" resultType="Conference">
+        select * from confence where (start &gt;= #{start} and start  &lt;= #{end} ) or timeSlot=1
+    </select>
+    <select id="findRoute" resultType="Route">
+        SELECT * FROM route NATURAL JOIN (SELECT r_id AS id FROM user_rou WHERE u_id IN (SELECT sub_id FROM subscribe WHERE u_id=#{id})) AS a where (start &gt;= #{start} and start  &lt;= #{end}) or timeSlot=1
+    </select>
+    <select id="findSchedule" resultType="Schedule">
+        SELECT * FROM SCHEDULE NATURAL JOIN (SELECT s_id AS id FROM user_sch WHERE u_id IN (SELECT sub_id FROM subscribe WHERE u_id=#{id})) AS a where (start &gt;= #{start} and start  &lt;= #{end})  or timeSlot=1
+    </select>
+</mapper>

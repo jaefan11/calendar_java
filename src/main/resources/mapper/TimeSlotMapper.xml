@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scu.szmt.mapper.TimeSlotMapper">
+    <insert id="addTimeSlotCon" parameterType="TimeSlot" useGeneratedKeys="true" keyProperty="id">
+        insert into timeslot_con(c_id,start,end,value) values(#{eId},#{start},#{end},#{value})
+    </insert>
+    <insert id="addTimeSlotRou" parameterType="TimeSlot" useGeneratedKeys="true" keyProperty="id">
+        insert into timeslot_rou(r_id,start,end,value) values(#{eId},#{start},#{end},#{value})
+    </insert>
+    <insert id="addTimeSlotSch" parameterType="TimeSlot" useGeneratedKeys="true" keyProperty="id">
+        insert into timeslot_sch(s_id,start,end,value) values(#{eId},#{start},#{end},#{value})
+    </insert>
+    <select id="findTimeSlotCon" resultType="TimeSlot">
+        select c_id as eId,start,end,value from timeslot_con where c_id=#{cid} and (start &gt;= #{start} and start  &lt;= #{end})
+    </select>
+    <select id="findTimeSlotRou" resultType="TimeSlot">
+        select r_id as eId,start,end,value from timeslot_rou where r_id=#{rid} and (start &gt;= #{start} and start  &lt;= #{end})
+    </select>
+    <select id="findTimeSlotSch" resultType="TimeSlot">
+        select s_id as eId,start,end,value from timeslot_sch where s_id=#{sid} and (start &gt;= #{start} and start  &lt;= #{end})
+    </select>
+    <delete id="deletTimeSlotCon" parameterType="int">
+        delete from timeslot_con where c_id = #{id}
+    </delete>
+    <delete id="deletTimeSlotRou" parameterType="int">
+        delete from timeslot_rou where r_id = #{id}
+    </delete>
+    <delete id="deletTimeSlotSch" parameterType="int">
+        delete from timeslot_sch where s_id = #{id}
+    </delete>
+</mapper>
